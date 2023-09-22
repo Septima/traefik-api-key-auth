@@ -13,7 +13,7 @@ Add to your Traefik static configuration
 ```yaml
 experimental:
   plugins:
-    traefik-api-key-middleware:
+    traefik-api-key-auth:
       moduleName: "github.com/Septima/traefik-api-key-auth"
       version: "v0.1.0"
 ```
@@ -31,8 +31,8 @@ experimental:
 Add to your startup args:
 
 ```sh
---experimental.plugins.traefik-api-key-middleware.modulename=github.com/Septima/traefik-api-key-auth
---experimental.plugins.traefik-api-key-middleware.version=v0.1.0
+--experimental.plugins.traefik-api-key-auth.modulename=github.com/Septima/traefik-api-key-auth
+--experimental.plugins.traefik-api-key-auth.version=v0.1.0
 ```
 
 ### K8s CRD
@@ -44,7 +44,7 @@ metadata:
   name: verify-api-key
 spec:
   plugin:
-    traefik-api-key-middleware:
+    traefik-api-key-auth:
       authenticationHeader: true
       authenticationHeaderName: X-API-KEY
       bearerHeader: true
