@@ -15,7 +15,7 @@ experimental:
   plugins:
     traefik-api-key-auth:
       moduleName: "github.com/Septima/traefik-api-key-auth"
-      version: "v0.1.0"
+      version: "v0.2.2"
 ```
 
 #### toml
@@ -23,7 +23,7 @@ experimental:
 ```toml
 [experimental.plugins.traefik-api-key-auth]
   moduleName = "github.com/Septima/traefik-api-key-auth"
-  version = "v0.1.0"
+  version = "v0.2.2"
 ```
 
 ### CLI
@@ -32,7 +32,7 @@ Add to your startup args:
 
 ```sh
 --experimental.plugins.traefik-api-key-auth.modulename=github.com/Septima/traefik-api-key-auth
---experimental.plugins.traefik-api-key-auth.version=v0.1.0
+--experimental.plugins.traefik-api-key-auth.version=v0.2.2
 ```
 
 ### K8s CRD
