@@ -54,6 +54,7 @@ spec:
       pathSegment: true
       removeHeadersOnSuccess: true
       internalForwardHeaderName: ''
+      internalErrorRoute: ''
       keys:
         - some-api-key
 ```
@@ -70,7 +71,8 @@ spec:
 | `queryParamName`           | `"token"`         | string   | The name of the query string param.                            | ✅       |
 | `pathSegment`              | `true`            | bool     | Use match on path segment to pass a valid key.                 | ⚠️       |
 | `removeHeadersOnSuccess`   | `true`            | bool     | If true will remove the header on success.                     | ✅       |
-| `internalForwardHeaderName`| `""`                | string   | Optionally forward validated key as header to next middleware. | ✅       |
+| `internalForwardHeaderName`| `""`              | string   | Optionally forward validated key as header to next middleware. | ✅       |
+| `internalErrorRoute`       | `""`              | string   | Optionally route to backend at specified path on invalid key   | ✅       |
 | `keys`                     | `[]`              | []string | A list of valid keys that can be passed using the headers.     | ❌       |
 
 ⚠️ - Is optional but at least one of `authenticationHeader` or `bearerHeader` must be set to `true`.

@@ -21,6 +21,7 @@ type Config struct {
 	Keys                      []string `json:"keys,omitempty"`
 	RemoveHeadersOnSuccess    bool     `json:"removeHeadersOnSuccess,omitempty"`
 	InternalForwardHeaderName string   `json:"internalForwardHeaderName,omitempty"`
+	InternalErrorRoute        string   `json:"internalErrorRoute,omitempty"`
 }
 
 type Response struct {
@@ -40,6 +41,7 @@ func CreateConfig() *Config {
 		Keys:                      make([]string, 0),
 		RemoveHeadersOnSuccess:    true,
 		InternalForwardHeaderName: "",
+		InternalErrorRoute:        "",
 	}
 }
 
@@ -55,6 +57,7 @@ type KeyAuth struct {
 	keys                      []string
 	removeHeadersOnSuccess    bool
 	internalForwardHeaderName string
+	internalErrorRoute        string
 }
 
 func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
@@ -82,6 +85,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 		keys:                      config.Keys,
 		removeHeadersOnSuccess:    config.RemoveHeadersOnSuccess,
 		internalForwardHeaderName: config.InternalForwardHeaderName,
+		internalErrorRoute:        config.InternalErrorRoute,
 	}, nil
 }
 
@@ -175,6 +179,12 @@ func (ka *KeyAuth) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			ka.ok(rw, req, matchedKey)
 			return
 		}
+	}
+
+	if ka.internalErrorRoute != "" {
+		req.URL.Path = ka.internalErrorRoute
+		req.URL.RawQuery = ""
+		return
 	}
 
 	var response = Response{
