@@ -1,0 +1,18 @@
+﻿displayName: API Key Auth
+type: middleware
+
+import: github.com/Septima/traefik-api-key-auth
+
+summary: "Authorise API requests with an API Key"
+
+testData:
+  authenticationHeader: true
+  authenticationheaderName: X-API-KEY
+  bearerHeader: true
+  bearerHeaderName: Authorization
+  removeHeadersOnSuccess: true
+  queryParam: true
+  queryParamName: token
+  pathSegment: true
+  keys:
+    - 83AB3503-50AA-4B57-9386-B9F0BADF2013
