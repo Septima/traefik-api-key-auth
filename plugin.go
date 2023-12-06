@@ -130,6 +130,7 @@ func (ka *KeyAuth) ok(rw http.ResponseWriter, req *http.Request, key string) {
 	if ka.internalForwardHeaderName != "" {
 		req.Header.Add(ka.internalForwardHeaderName, key)
 	}
+	req.RequestURI = req.URL.RequestURI()
 	ka.next.ServeHTTP(rw, req)
 }
 
