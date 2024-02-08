@@ -13,6 +13,7 @@ testData:
   removeHeadersOnSuccess: true
   queryParam: true
   queryParamName: token
+  removeQueryParamsOnSuccess: false
   pathSegment: true
   keys:
     - 83AB3503-50AA-4B57-9386-B9F0BADF2013

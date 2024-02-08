@@ -11,17 +11,18 @@ import (
 )
 
 type Config struct {
-	AuthenticationHeader      bool     `json:"authenticationHeader,omitempty"`
-	AuthenticationHeaderName  string   `json:"headerName,omitempty"`
-	BearerHeader              bool     `json:"bearerHeader,omitempty"`
-	BearerHeaderName          string   `json:"bearerHeaderName,omitempty"`
-	QueryParam                bool     `json:"queryParam,omitempty"`
-	QueryParamName            string   `json:"queryParamName,omitempty"`
-	PathSegment               bool     `json:"pathSegment,omitempty"`
-	Keys                      []string `json:"keys,omitempty"`
-	RemoveHeadersOnSuccess    bool     `json:"removeHeadersOnSuccess,omitempty"`
-	InternalForwardHeaderName string   `json:"internalForwardHeaderName,omitempty"`
-	InternalErrorRoute        string   `json:"internalErrorRoute,omitempty"`
+	AuthenticationHeader       bool     `json:"authenticationHeader,omitempty"`
+	AuthenticationHeaderName   string   `json:"headerName,omitempty"`
+	BearerHeader               bool     `json:"bearerHeader,omitempty"`
+	BearerHeaderName           string   `json:"bearerHeaderName,omitempty"`
+	QueryParam                 bool     `json:"queryParam,omitempty"`
+	QueryParamName             string   `json:"queryParamName,omitempty"`
+	PathSegment                bool     `json:"pathSegment,omitempty"`
+	removeQueryParamsOnSuccess bool		`json:"removeQueryParamsOnSuccess,omitempty"`
+	Keys                       []string `json:"keys,omitempty"`
+	RemoveHeadersOnSuccess     bool     `json:"removeHeadersOnSuccess,omitempty"`
+	InternalForwardHeaderName  string   `json:"internalForwardHeaderName,omitempty"`
+	InternalErrorRoute         string   `json:"internalErrorRoute,omitempty"`
 }
 
 type Response struct {
@@ -38,6 +39,7 @@ func CreateConfig() *Config {
 		QueryParam:                true,
 		QueryParamName:            "token",
 		PathSegment:               true,
+		removeQueryParamsOnSuccess:true,
 		Keys:                      make([]string, 0),
 		RemoveHeadersOnSuccess:    true,
 		InternalForwardHeaderName: "",
@@ -46,18 +48,19 @@ func CreateConfig() *Config {
 }
 
 type KeyAuth struct {
-	next                      http.Handler
-	authenticationHeader      bool
-	authenticationHeaderName  string
-	bearerHeader              bool
-	bearerHeaderName          string
-	queryParam                bool
-	queryParamName            string
-	pathSegment               bool
-	keys                      []string
-	removeHeadersOnSuccess    bool
-	internalForwardHeaderName string
-	internalErrorRoute        string
+	next                       http.Handler
+	authenticationHeader       bool
+	authenticationHeaderName   string
+	bearerHeader               bool
+	bearerHeaderName           string
+	queryParam                 bool
+	queryParamName             string
+	pathSegment                bool
+	removeQueryParamsOnSuccess bool
+	keys                       []string
+	removeHeadersOnSuccess     bool
+	internalForwardHeaderName  string
+	internalErrorRoute         string
 }
 
 func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
@@ -74,18 +77,19 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 	}
 
 	return &KeyAuth{
-		next:                      next,
-		authenticationHeader:      config.AuthenticationHeader,
-		authenticationHeaderName:  config.AuthenticationHeaderName,
-		bearerHeader:              config.BearerHeader,
-		bearerHeaderName:          config.BearerHeaderName,
-		queryParam:                config.QueryParam,
-		queryParamName:            config.QueryParamName,
-		pathSegment:               config.PathSegment,
-		keys:                      config.Keys,
-		removeHeadersOnSuccess:    config.RemoveHeadersOnSuccess,
-		internalForwardHeaderName: config.InternalForwardHeaderName,
-		internalErrorRoute:        config.InternalErrorRoute,
+		next:                       next,
+		authenticationHeader:       config.AuthenticationHeader,
+		authenticationHeaderName:   config.AuthenticationHeaderName,
+		bearerHeader:               config.BearerHeader,
+		bearerHeaderName:           config.BearerHeaderName,
+		queryParam:                 config.QueryParam,
+		queryParamName:             config.QueryParamName,
+		pathSegment:                config.PathSegment,
+		removeQueryParamsOnSuccess: config.removeQueryParamsOnSuccess,
+		keys:                       config.Keys,
+		removeHeadersOnSuccess:     config.RemoveHeadersOnSuccess,
+		internalForwardHeaderName:  config.InternalForwardHeaderName,
+		internalErrorRoute:         config.InternalErrorRoute,
 	}, nil
 }
 
@@ -166,7 +170,9 @@ func (ka *KeyAuth) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		var qs = req.URL.Query()
 		var matchedKey = contains(qs.Get(ka.queryParamName), ka.keys, true)
 		if matchedKey != "" {
+			if ka.removeQueryParamsOnSuccess{
 			qs.Del(ka.queryParamName)
+			}
 			req.URL.RawQuery = qs.Encode()
 			ka.ok(rw, req, matchedKey)
 			return
