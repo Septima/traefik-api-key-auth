@@ -1,7 +1,7 @@
 ﻿displayName: API Key Auth
 type: middleware
 
-import: github.com/Septima/traefik-api-key-auth
+import: github.com/realCity/traefik-api-key-auth
 
 summary: "Authorise API requests with an API Key"
 

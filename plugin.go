@@ -18,7 +18,7 @@ type Config struct {
 	QueryParam                 bool     `json:"queryParam,omitempty"`
 	QueryParamName             string   `json:"queryParamName,omitempty"`
 	PathSegment                bool     `json:"pathSegment,omitempty"`
-	removeQueryParamsOnSuccess bool		`json:"removeQueryParamsOnSuccess,omitempty"`
+	RemoveQueryParamsOnSuccess bool		`json:"removeQueryParamsOnSuccess,omitempty"`
 	Keys                       []string `json:"keys,omitempty"`
 	RemoveHeadersOnSuccess     bool     `json:"removeHeadersOnSuccess,omitempty"`
 	InternalForwardHeaderName  string   `json:"internalForwardHeaderName,omitempty"`
@@ -39,7 +39,7 @@ func CreateConfig() *Config {
 		QueryParam:                true,
 		QueryParamName:            "token",
 		PathSegment:               true,
-		removeQueryParamsOnSuccess:true,
+		RemoveQueryParamsOnSuccess:true,
 		Keys:                      make([]string, 0),
 		RemoveHeadersOnSuccess:    true,
 		InternalForwardHeaderName: "",
@@ -85,7 +85,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 		queryParam:                 config.QueryParam,
 		queryParamName:             config.QueryParamName,
 		pathSegment:                config.PathSegment,
-		removeQueryParamsOnSuccess: config.removeQueryParamsOnSuccess,
+		removeQueryParamsOnSuccess: config.RemoveQueryParamsOnSuccess,
 		keys:                       config.Keys,
 		removeHeadersOnSuccess:     config.RemoveHeadersOnSuccess,
 		internalForwardHeaderName:  config.InternalForwardHeaderName,
@@ -171,7 +171,7 @@ func (ka *KeyAuth) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		var matchedKey = contains(qs.Get(ka.queryParamName), ka.keys, true)
 		if matchedKey != "" {
 			if ka.removeQueryParamsOnSuccess{
-			qs.Del(ka.queryParamName)
+				qs.Del(ka.queryParamName)
 			}
 			req.URL.RawQuery = qs.Encode()
 			ka.ok(rw, req, matchedKey)
