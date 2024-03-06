@@ -1,4 +1,4 @@
-﻿displayName: API Key Auth
+﻿displayName: API Key Auth RC
 type: middleware
 
 import: github.com/realCity/traefik-api-key-auth
