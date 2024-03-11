@@ -1,7 +1,7 @@
-﻿displayName: API Key Auth
+﻿displayName: API Key Auth RC
 type: middleware
 
-import: github.com/Septima/traefik-api-key-auth
+import: github.com/realCity/traefik-api-key-auth
 
 summary: "Authorise API requests with an API Key"
 
@@ -13,6 +13,7 @@ testData:
   removeHeadersOnSuccess: true
   queryParam: true
   queryParamName: token
+  removeQueryParamsOnSuccess: false
   pathSegment: true
   keys:
     - 83AB3503-50AA-4B57-9386-B9F0BADF2013
